@@ -4,6 +4,8 @@ Created this game with MDN's Phaser Development Tutorials.
 
 This game is a basic version of the classic breakout game; move the mouse to play.
 
+PLAY HERE: http://2dep4u.github.io/Breakout2D/
+
 
 Made major improvements to the original game:
 <ul>
