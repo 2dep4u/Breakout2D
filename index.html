@@ -1,10 +1,8 @@
-<!-- Testing GIT!!!!!! -->
-
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>Gamedev Phaser Workshop - lesson 01: Initialize the framework</title>
+    <title>My improved version of MDN's Gamedev Phaser Tutorial</title>
     <style>* { padding: 0; margin: 0; }</style>
     <script src="js/phaser.min.js"></script>
 </head>
@@ -15,13 +13,10 @@
     });
 
     var ball, paddle, bricks, newBrick, brickInfo;
-
     var scoreText;
     var score = 0;
-
     var lives = 3;
-    var livesText, lifeLostText;
-
+    var livesText, lifeLostText, GameOverText, YouWinText;
     var playing = false;
     var startButton;
 
@@ -34,7 +29,7 @@
                 col: 3
             },
             offset: {
-                top: 50,
+                top: 70,
                 left: 60
             },
             padding: 10
@@ -53,7 +48,7 @@
     }
 
     function preload() {
-        game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+        game.scale.scaleMode = Phaser.ScaleManager.NO_SCALE;
         game.scale.pageAlignHorizontally = true;
         game.scale.pageAlignVertically = true;
         game.stage.backgroundColor = '#eee';
@@ -67,10 +62,7 @@
     }
     function create() {
         ball = game.add.sprite(game.world.width*0.5, game.world.height-25, 'ball');
-        ball.animations.add('wobble', [0,1,0,2,0,1,0,2,0], 24);
-
         ball.anchor.set(0.5);
-
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.physics.enable(ball, Phaser.Physics.ARCADE);
         ball.body.collideWorldBounds = true;
@@ -87,15 +79,24 @@
 
         initBricks();
 
-        textStyle = { font: '18px Arial', fill: '#0095DD' };
+        var textStyle = { font: '18px Arial', fill: '#0095DD' };
         scoreText = game.add.text(5, 5, 'Points: 0', textStyle);
         livesText = game.add.text(game.world.width-5, 5, 'Lives: '+lives, textStyle);
         livesText.anchor.set(1,0);
-        lifeLostText = game.add.text(game.world.width*0.5, game.world.height*0.5, 'Life lost, click to continue', textStyle);
+
+        lifeLostText = game.add.text(game.world.width*0.5, game.world.height*0.6, 'Life lost, click to continue', textStyle);
         lifeLostText.anchor.set(0.5);
         lifeLostText.visible = false;
 
-        startButton = game.add.button(game.world.width*0.5, game.world.height*0.5, 'button', startGame, this, 1, 0, 2);
+        GameOverText = game.add.text(game.world.width*0.5, game.world.height*0.6, 'GAME OVER! Click to try again.', textStyle);
+        GameOverText.anchor.set(0.5);
+        GameOverText.visible = false;
+
+        YouWinText = game.add.text(game.world.width*0.5, game.world.height*0.6, 'You Win! Click to play again.', textStyle);
+        YouWinText.anchor.set(0.5);
+        YouWinText.visible = false;
+
+        startButton = game.add.button(game.world.width*0.5, game.world.height*0.6, 'button', startGame, this, 1, 0, 2);
         startButton.anchor.set(0.5);
     }
 
@@ -103,52 +104,60 @@
         game.physics.arcade.collide(ball, paddle,ballHitPaddle);
         game.physics.arcade.collide(ball, bricks, ballHitBrick);
         if (playing) {
-            paddle.x = game.input.x || game.world.width * 0.5;
+            paddle.x = game.input.x;// || game.world.width * 0.5;
         }
     }
     function ballHitBrick(ball, brick) {
-        var killTween = game.add.tween(brick.scale);
-        killTween.to({x:0,y:0}, 200, Phaser.Easing.Linear.None);
-        killTween.onComplete.addOnce(function(){
-            brick.kill();
-        }, this);
-        killTween.start();
+        brick.kill();
         score += 10;
         scoreText.setText('Points: '+score);
-        if(score === brickInfo.count.row*brickInfo.count.col*10) {
-            alert('You won the game, congratulations!');
-            location.reload();
+        if (score%30 == 0) {
+            ball.body.velocity.y = 1.3 * ball.body.velocity.y;
+            ball.body.velocity.x = 1.3 * ball.body.velocity.x;
         }
-        ball.body.velocity.y = 1.1*ball.body.velocity.y;
-        ball.body.velocity.x = 1.1*ball.body.velocity.x;
+        if(score === brickInfo.count.row*brickInfo.count.col*10) {
+            YouWinText.visible = true;
+
+            game.input.onDown.addOnce(function(){
+                location.reload();
+            }, this);        }
     }
 
     function ballLeaveScreen() {
+        if (score < brickInfo.count.row*brickInfo.count.col*10){
         lives--;
-        if(lives) {
-            livesText.setText('Lives: '+lives);
-            lifeLostText.visible = true;
-            ball.reset(game.world.width*0.5, game.world.height-25);
-            paddle.reset(game.world.width*0.5, game.world.height-5);
-            game.input.onDown.addOnce(function(){
-                lifeLostText.visible = false;
-                ball.body.velocity.set(150, -150);
-            }, this);
-        }
-        else {
-            alert('You lost, game over!');
-            location.reload();
+            if (lives) {
+                playing = false;
+                livesText.setText('Lives: ' + lives);
+                lifeLostText.visible = true;
+                ball.reset(game.world.width * 0.5, game.world.height - 25);
+                paddle.reset(game.world.width * 0.5, game.world.height - 5);
+                ball.body.gravity.y = 0;
+                game.input.onDown.addOnce(function () {
+                    playing = true;
+                    lifeLostText.visible = false;
+                    ball.body.velocity.set(250, -250);
+                }, this);
+            }
+            else {
+                livesText.setText('Lives: ' + lives);
+                console.log("Its totally myfault");
+                GameOverText.visible = true;
+                console.log(score);
+                game.input.onDown.addOnce(function () {
+                    location.reload();
+                }, this);
+            }
         }
     }
 
     function ballHitPaddle(ball, paddle) {
-        ball.animations.play('wobble');
         ball.body.velocity.x = -1*5*(paddle.x-ball.x);
     }
 
     function startGame() {
         startButton.destroy();
-        ball.body.velocity.set(150, -150);
+        ball.body.velocity.set(0, -250);
         playing = true;
     }
 </script>
