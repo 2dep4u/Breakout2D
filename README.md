@@ -7,10 +7,10 @@ This game is a basic version of the classic breakout game; move the mouse to pla
 
 Made major improvements to the original game:
 <ul>
-  -stopped paddle from teleporting to the centre when it touches the left wall
-  -stopped the padding from moving after the ball leaves the game zone
-  -replaced "game over" and "game won" alerts to a text based prompt
-  -increased the difficult of the game by increasing the balls velocity after hitting a brick
-  -increased the balls initial velocity from 150,-150 to 250,-250
-  -removed the twine and wobble features... 
+  <li>stopped paddle from teleporting to the centre when it touches the left wall
+  <li>stopped the padding from moving after the ball leaves the game zone
+  <li>replaced "game over" and "game won" alerts to a text based prompt
+  <li>increased the difficult of the game by increasing the balls velocity after hitting a brick
+  <li>increased the balls initial velocity from 150,-150 to 250,-250
+  <li>removed the twine and wobble features... 
 </ul>
