@@ -4,8 +4,9 @@ Created this game with MDN's Phaser Development Tutorials.
 
 This game is a basic version of the classic breakout game; move the mouse to play.
 
-<ul>
+
 Made major improvements to the original game:
+<ul>
   <li>stopped paddle from teleporting to the centre when it touches the left wall
   <li>stopped the padding from moving after the ball leaves the game zone
   <li>replaced "game over" and "game won" alerts to a text based prompt
