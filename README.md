@@ -1,12 +1,11 @@
 # Breakout2D
 Personal project to learn JavaScript and game development
-==============================================================
 Created this game with MDN's Phaser Development Tutorials.
 
 This game is a basic version of the classic breakout game; move the mouse to play.
 
-Made major improvements to the original game:
 <ul>
+Made major improvements to the original game:
   <li>stopped paddle from teleporting to the centre when it touches the left wall
   <li>stopped the padding from moving after the ball leaves the game zone
   <li>replaced "game over" and "game won" alerts to a text based prompt
