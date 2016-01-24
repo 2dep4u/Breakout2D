@@ -1,5 +1,6 @@
 # Breakout2D
-Personal project to learn JavaScript and game development
+Personal project to learn JavaScript and game development.
+
 Created this game with MDN's Phaser Development Tutorials.
 
 This game is a basic version of the classic breakout game; move the mouse to play.
